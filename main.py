@@ -74,16 +74,21 @@ def main(LOGGER = True,
 
     # Pre Validations
 
-    counts = [TRAIN_IAMGE_COUNT_REAL, TRAIN_IAMGE_COUNT_FAKE, TEST_IMAGE_COUNT]
-    paths = [SOURCE_TRAIN_REAL, SOURCE_TRAIN_FAKE, SOURCE_TEST_REAL]
-    if ADD_FAKE_TEST_IMAGES:
-        counts.append(TEST_IMAGE_COUNT)
-        paths.append(SOURCE_TEST_FAKE)
-
-    if dataset_utils.validate_counts(counts, paths) == False:
+    if dataset_utils.validate_counts(
+        (TRAIN_IAMGE_COUNT_REAL, SOURCE_TRAIN_REAL),
+        (TRAIN_IAMGE_COUNT_FAKE, SOURCE_TRAIN_FAKE),
+        (TEST_IMAGE_COUNT, SOURCE_TEST_REAL),
+        ) == False:
         print('!!! validate_counts error !!!')
         quit()
 
+    if ADD_FAKE_TEST_IMAGES:
+         if dataset_utils.validate_counts(
+             (TEST_IMAGE_COUNT, SOURCE_TEST_FAKE),
+             ) == False:
+             print('!!! validate_counts error !!!')
+             quit()
+         
     dataset_utils.create_directories(DATASET_PATH, TEST_IMAGE_COUNT, ADD_FAKE_TEST_IMAGES)
 
     # Training Directory
@@ -120,9 +125,19 @@ def main(LOGGER = True,
         counts.append(TEST_IMAGE_COUNT)
         paths.append(f'{DATASET_PATH}test/fake/')
 
-    if dataset_utils.validate_directories(counts, paths, DATASET_PATH, LOGGER) == False:
+    if dataset_utils.validate_directory_counts(LOGGER,
+        (TRAIN_IMAGE_COUNT, f'{DATASET_PATH}train/'),
+        (TEST_IMAGE_COUNT, f'{DATASET_PATH}test/real/'),
+        ) == False:
         print('!!! validate_directories error !!!')
         quit()
+
+    if ADD_FAKE_TEST_IMAGES:
+        if dataset_utils.validate_directory_counts(LOGGER,
+            (TEST_IMAGE_COUNT, f'{DATASET_PATH}test/fake/'),
+            ) == False:
+            print('!!! validate_directories error !!!')
+            quit()
 
     if LOGGER: dataset_utils.print_chart(counts, paths, DATASET_PATH)
 

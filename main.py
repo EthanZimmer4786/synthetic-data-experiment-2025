@@ -261,26 +261,6 @@ def main(LOGGER = True,
 
 ########## ########## ##########
 
-def list_permutations_xy(x_arr, y_arr):
-    permutations = []
-
-    for x in x_arr: 
-        for y in y_arr:
-            permutations.append([x, y])
-
-    return permutations
-
-def list_permutations_xyz(x_arr, y_arr, z_arr):
-    permutations = []
-
-    for x in x_arr: 
-        for y in y_arr:
-            for z in z_arr:
-                permutations.append([x, y, z])
-
-    return permutations
-
-
 if __name__ == "__main__":
     step = 0
 
@@ -293,7 +273,7 @@ if __name__ == "__main__":
 
     ########## Trials Generator ##########
 
-    trial_permutations = list_permutations_xy(train_image_count, fake_image_ratio)
+    trial_permutations = [[x, y] for x in train_image_count for y in fake_image_ratio]
 
     conn = sqlite3.connect(database_path)
     cursor = conn.cursor()

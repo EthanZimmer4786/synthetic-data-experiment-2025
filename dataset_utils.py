@@ -5,14 +5,21 @@ import qol_print
 
 ########## Count Validation ##########
 
-def validate_counts(counts, paths):
-    if len(counts) != len(paths):
-        print('Discrepency between counts length and paths length in validate_counts')
-        return False
-    for i in range(len(counts)):
-        if counts[i] > len(os.listdir(paths[i])):
-            print(f'Requested {counts[i]} files from directory: {paths[i]}')
-            print(f'Cannot exceed file count of: {str(len(os.listdir(paths[i])))}')
+def validate_counts(*args):
+    """
+    Ensures there are enough images in a directory to fulfill the desired amount
+
+    Arguments:
+    *args (tuple): tuple of image count and dataset path (# images, path)
+
+    Returns:
+    True if validation succeeds, False if otherwise
+    """
+    
+    for arg in args:
+        if arg[0] > len(os.listdir(arg[1])):
+            print(f'Requested {arg[0]} files from directory: {arg[1]}')
+            print(f'Cannot exceed file count of: {str(len(os.listdir(arg[1])))}')
             return False
     return True
 
@@ -55,19 +62,27 @@ def get_random_files(count, src_dir, dst_dir, suffix, LOGGER):
 
 ########## Directory Validations ##########
 
-def validate_directories(counts, paths, DATASET_PATH, LOGGER):
-    if len(counts) != len(paths):
-        print('Discrepency between counts length and paths length in validate_directories')
-        return False
-    for i in range(len(paths)):
+def validate_directory_counts(LOGGER, *args):
+    """
+    Ensures each dataset has the exact number of images requested upon generation
+
+    Arguments:
+    LOGGER (bool): whether or not logging is enabled
+    *args (tuple): tuple of image count and dataset path (# images, path)
+
+    Returns:
+    True if validation succeeds, False if otherwise
+    """
+    
+    for arg in args:
         sum = 0
-        for j in range(10):
-            sum += len(os.listdir(paths[i] + str(j)))
+        for i in range(10):
+            sum += len(os.listdir(arg[1] + str(i)))
         if LOGGER:
-            print(f'{sum}/{counts[i]} files in {paths[i].replace(DATASET_PATH,"")}')
+            print(f'{sum}/{arg[0]} files in {arg[1]}')
             print('----------')
-        if sum != counts[i]:
-            print(f'Discrepency between number of files in {paths[i].replace(DATASET_PATH,"")} and expected number of {counts[i]}')
+        if sum != arg[1]:
+            print(f'Discrepency between number of files in {arg[1]} and expected number of {arg[0]}')
             return False
     return True
 

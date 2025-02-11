@@ -128,7 +128,7 @@ def main(LOGGER = True,
 
     ########## Convolutional Neural Network ##########
 
-    # Format Created Dataset to Tensorflow Dataset
+    # Turn directory into Tensorflow dataset
 
     train_ds = cnn_utils.create_dataset(f'{DATASET_PATH}train/', 'training', BATCH_SIZE, IMG_HEIGHT, IMG_WIDTH, SEED, LOGGER)
     val_ds = cnn_utils.create_dataset(f'{DATASET_PATH}train/', 'validation', BATCH_SIZE, IMG_HEIGHT, IMG_WIDTH, SEED, LOGGER)
@@ -146,7 +146,7 @@ def main(LOGGER = True,
     train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size = AUTOTUNE)
     val_ds   = val_ds.cache().prefetch(buffer_size = AUTOTUNE)
 
-    # Model Creation
+    # Model creation
 
     input_shape = layers.Input(shape = (IMG_HEIGHT, IMG_WIDTH, 3))
 
@@ -157,7 +157,7 @@ def main(LOGGER = True,
                   loss = keras.losses.SparseCategoricalCrossentropy(from_logits = True),
                   metrics = ['accuracy'])
     
-    # Model Training
+    # Model training
 
     history = model.fit(
         train_ds,
@@ -172,7 +172,7 @@ def main(LOGGER = True,
     train_loss = history.history['loss']
     val_loss = history.history['val_loss']
 
-    # Model Testing
+    # Model testing
 
     test_ds = cnn_utils.create_dataset(f'{DATASET_PATH}test/REAL/', False, BATCH_SIZE, IMG_HEIGHT, IMG_WIDTH, SEED, LOGGER)
     if LOGGER: print('----------')
@@ -242,7 +242,7 @@ def main(LOGGER = True,
 
     ########## Delete Dataset ##########
 
-    # os.remove(DATASET_PATH)
+    # os.rmdir(DATASET_PATH)
 
 ########## ########## ##########
 
@@ -269,11 +269,11 @@ def list_permutations_xyz(x_arr, y_arr, z_arr):
 if __name__ == "__main__":
     step = 0
 
-    train_image_count = [200, 1000, 5000, 20000] # [100, 200, 500, 1000, 2000, 3000, 5000, 10000, 20000, 30000, 50000]
-    fake_image_ratio = [0.0, 0.25, 0.5, 0.75, 1.0] # [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-    num_trials = 50
+    train_image_count = [100, 200, 500, 1000, 2000, 3000, 5000, 10000, 20000, 30000, 50000]
+    fake_image_ratio = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    num_trials = 5
 
-    database_path = './data/deviation.db'
+    database_path = './data/full-scale.db'
     if not os.path.exists(database_path): quit()
 
     ########## Trials Generator ##########
@@ -309,7 +309,7 @@ if __name__ == "__main__":
             TEST_IMAGE_COUNT=1000,
             EPOCHS=15,
 
-            ADD_FAKE_TEST_IMAGES=True,
+            ADD_FAKE_TEST_IMAGES=False,
 
             DATABASE_PATH=database_path,
             

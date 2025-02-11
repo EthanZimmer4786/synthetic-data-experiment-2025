@@ -20,7 +20,7 @@ def validate_counts(counts, paths):
 
 def create_directories(DATASET_PATH, TEST_IMAGE_COUNT, ADD_FAKE_TEST_IMAGES):
     # Header Folders
-    os.makedirs(DATASET_PATH)
+    os.makedirs(DATASET_PATH, 0o777)
     os.makedirs(f'{DATASET_PATH}train/')
     if TEST_IMAGE_COUNT > 0:
         os.makedirs(f'{DATASET_PATH}test/real/')

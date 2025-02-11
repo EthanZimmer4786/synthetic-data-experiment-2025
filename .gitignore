@@ -1,5 +1,9 @@
 CIFAKE-dataset
 data/*
+
+!data/deviation.db
+!data/full-scale.db
+
 generated-datasets/*
 
 # Byte-compiled / optimized / DLL files

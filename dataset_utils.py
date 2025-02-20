@@ -81,7 +81,7 @@ def validate_directory_counts(LOGGER, *args):
         if LOGGER:
             print(f'{sum}/{arg[0]} files in {arg[1]}')
             print('----------')
-        if sum != arg[1]:
+        if sum != arg[0]:
             print(f'Discrepency between number of files in {arg[1]} and expected number of {arg[0]}')
             return False
     return True

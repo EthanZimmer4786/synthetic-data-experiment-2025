@@ -91,7 +91,7 @@ def split_list_xyz(x, y, z):
 
 ########## Heatmap ##########
 
-def heatmap(fig, relative_cmap, log_scale):
+def heatmap(fig, relative_cmap, log_scale, mode=0):
 
     x_axis = 'train_image_count'
     y_axis = 'fake_image_ratio'
@@ -100,6 +100,21 @@ def heatmap(fig, relative_cmap, log_scale):
     x, y, z = pull_data(DATABASE_PATH, x_axis, y_axis, z_axis)
 
     levels = 50
+
+    x2 = []
+    y2 = []
+    z2 = []
+    if mode == 0:
+        for row in split_list_xyz(z, x, y):
+            x2.append(row[1])
+            y2.append(row[2])
+            z2.append(np.average(row[0]))
+
+    elif mode == 1:
+        for row in split_list_xyz(z, x, y):
+            x2.append(max(100, row[1] * (1 - row[2])))
+            y2.append(max(100, row[1] * row[2]))
+            z2.append(np.average(row[0]))
 
     cmap = plt.get_cmap('viridis')
 
@@ -110,15 +125,24 @@ def heatmap(fig, relative_cmap, log_scale):
     
     ax = fig.add_subplot()
 
-    ax.tricontour(x, y, z, levels=levels, linewidths=0.1, colors='k')
-    contourf = ax.tricontourf(x, y, z, levels=levels, cmap=cmap)
-    ax.scatter(x, y, c='k', marker='.', s=5)
+    ax.tricontour(x2, y2, z2, levels=levels, linewidths=0.1, colors='k')
+    contourf = ax.tricontourf(x2, y2, z2, levels=levels, cmap=cmap)
+    ax.scatter(x2, y2, c='k', marker='.', s=5)
 
     if(log_scale):
         ax.set_xscale('log')
         ax.set_xticks(ticks=LOG_TICKS, labels=[str(x) for x in LOG_TICKS])
+        ax.set_xlim(xmin=100)
+        
+        if mode == 1:
+            ax.set_yscale('log')
+            ax.set_yticks(ticks=LOG_TICKS, labels=[str(x) for x in LOG_TICKS])
+            ax.set_ylim(ymin=100)
     
-    ax.set(title=DATABASE_PATH, xlabel=x_axis, ylabel=y_axis)
+    if mode == 0:
+        ax.set(title=DATABASE_PATH, xlabel=x_axis, ylabel=y_axis)
+    elif mode ==1:
+        ax.set(title=DATABASE_PATH, xlabel="real_image_count", ylabel="fake_image_count")
 
     fig.colorbar(contourf, ax=ax, label=z_axis)
 
@@ -291,14 +315,14 @@ def deviation_graph(fig):
 
 if __name__ == "__main__":
 
-    DATABASE_PATH = './data/deviation.db'
+    DATABASE_PATH = './data/full-scale.db'
 
     relative_cmap = True # if true: cmap values range from data min to data max || otherwise: cmap values range from 0 - 1
 
     LOG_TICKS = [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000]
 
-    # f1 = plt.figure(1)
-    # f1 = heatmap(f1, relative_cmap=relative_cmap, log_scale=False)    
+    f1 = plt.figure(1)
+    f1 = heatmap(f1, relative_cmap=relative_cmap, log_scale=True, mode=1)    
 
     # f2 = plt.figure(2)
     # f2 = trial_history_graph(f2)
@@ -309,7 +333,7 @@ if __name__ == "__main__":
     # f4 = plt.figure(4)
     # f4 = compute_time_graph(f4)
 
-    f5 = plt.figure(5)
-    f5 = deviation_graph(f5)
+    # f5 = plt.figure(5)
+    # f5 = deviation_graph(f5)
 
     plt.show()

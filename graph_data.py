@@ -38,14 +38,6 @@ def split_list_xy(x, y):
     Split x list into tuples containing a list and value of y.
     The list in the tuple contains x values that share a similar value of y, compared by index.
     """
-    
-    # y_set = sorted(list(set(y)))
-    # x2 = [([], y) for y in y_set]
-
-    # for i in range(len(x)):
-    #     x2[y_set.index(y[i])][0].append(x[i])
-
-    # return x2
 
     arr = []
     for i in range(len(x)):
@@ -79,16 +71,6 @@ def split_list_xyz(x, y, z):
     
     return split_arr
 
-    
-    # y_set = sorted(list(set(y)))
-    # z_set = sorted(list(set(z)))
-    # x2 = [([], y, z) for y in y_set for z in z_set ]
-
-    # for i in range(len(x)):
-    #     x2[y_set.index(y[i])][0].append(x[i])
-
-    # return x2
-
 ########## Heatmap ##########
 
 def heatmap(fig, relative_cmap, log_scale, mode=0):
@@ -112,8 +94,8 @@ def heatmap(fig, relative_cmap, log_scale, mode=0):
 
     elif mode == 1:
         for row in split_list_xyz(z, x, y):
-            x2.append(max(100, row[1] * (1 - row[2])))
-            y2.append(max(100, row[1] * row[2]))
+            x2.append(max(50, row[1] * (1 - row[2])))
+            y2.append(max(50, row[1] * row[2]))
             z2.append(np.average(row[0]))
 
     cmap = plt.get_cmap('viridis')
@@ -132,12 +114,12 @@ def heatmap(fig, relative_cmap, log_scale, mode=0):
     if(log_scale):
         ax.set_xscale('log')
         ax.set_xticks(ticks=LOG_TICKS, labels=[str(x) for x in LOG_TICKS])
-        ax.set_xlim(xmin=100)
+        ax.set_xlim(xmin=50)
         
         if mode == 1:
             ax.set_yscale('log')
             ax.set_yticks(ticks=LOG_TICKS, labels=[str(x) for x in LOG_TICKS])
-            ax.set_ylim(ymin=100)
+            ax.set_ylim(ymin=50)
     
     if mode == 0:
         ax.set(title=DATABASE_PATH, xlabel=x_axis, ylabel=y_axis)

@@ -1,4 +1,6 @@
 # synthetic-data-experiment
+This repository is a collection of the code written by myself for my 2024-2025 research project on the usage of synthetic data in object detection.
+The code here should only be used as a reference, because there are likely numerous bugs or errors as I was still learning python at the time.
 
 ## CIFAKE Dataset
 The CIFAKE dataset contains real photographs from CIFAR-10 and synthetic images created with Stable Diffusion version 1.4.

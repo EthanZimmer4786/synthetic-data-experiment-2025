@@ -264,11 +264,11 @@ def main(LOGGER = True,
 if __name__ == "__main__":
     step = 0
 
-    train_image_count = [100, 200, 500, 1000, 2000, 3000, 5000, 10000, 20000, 30000, 50000]
-    fake_image_ratio = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    train_image_count = [100] #[100, 200, 500, 1000, 2000, 3000, 5000, 10000, 20000, 30000, 50000]
+    fake_image_ratio = [0.5] #[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     num_trials = 5
 
-    database_path = './data/full-scale.db'
+    database_path = './data/test.db'
     if not os.path.exists(database_path): quit()
 
     ########## Trials Generator ##########
@@ -304,11 +304,11 @@ if __name__ == "__main__":
             TEST_IMAGE_COUNT=1000,
             EPOCHS=15,
 
-            ADD_FAKE_TEST_IMAGES=False,
+            ADD_FAKE_TEST_IMAGES=True,
 
             DATABASE_PATH=database_path,
             
-            LOGGER=False,
+            LOGGER=True,
             )
         
         step += 1
